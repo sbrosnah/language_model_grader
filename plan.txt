@@ -1,0 +1,46 @@
+1. Create a GradeModel object
+    a. Functions:
+        I. LoadData()
+            A.LoadWordAssociations()
+                -Create a map in LoadWordAssociations() ***We may only need an array because we won't really be retrieving later. Let's just go with this for now***
+                    *Key: Cue
+                    *Value: Array of [word1, word2, word3]
+            B. LoadLanguageModel()
+                -Create a map of words in vector space with a line number
+                    *key: word
+                    *value: line number
+                -Load a pandas dataframe of all the words
+
+            C. The idea of loading both a map and a dataframe is that we can check if a word exists and if it does, get it's line number with speed
+                , then we can access the pandas dataframe quicker by using .iloc() all while keeping the functionality of a pandas dataframe.***
+        II. CalculateDistances() 
+            A. IDEAS OF HOW TO DO THIS
+                - This function needs to calculate the distances between the cue and it's related words.
+
+                ''' 
+                I THINK I LIKE THIS IDEA BEST
+                -This could be compared to the standard deviation in the vector space? (calculated in statistics)
+                    *Then we could calculate it's distance from the mean word (also found in statistics)
+                    *This would give us an arbitrary point to compare against. 
+                    *This would work because cosine distance takes into account The orientation?
+                        -Maybe I could make one side positive and the other negative in order to show which side a word is on in relation to the mean word?
+                '''
+
+                - We could find the average distance that words are apart and compare the distance to that? 
+                - Or maybe we could find the distance of the closest word to the cue word according to the vector space. 
+                    -Going off of this, I could create a separate program that ranks the words from closest to an arbitrary point (the mean?) to furthest. 
+                    This way we wouldn't have to rerun the program a bajillion times. This, however, would still take forever to complete. 
+                - We could look at each column indivitually and do something There
+            B. CalculateMeanWord()
+            C. CalculateStandardDeviation()
+            ***I NEED TO GET IDEAS ON HOW TO BEST DO THIS***
+            D. CalculateIndividualDistance()
+                -Find the distance of the cue word from the mean word. 
+                -For each word in WordAssociations, look up their word vectors in the language model and calculate their distance from the mean. 
+                -WordAssociativeDistance = cueWord - (word1 | word2 | word3)
+            E. RateDistances()
+                - Basically, I need to find some sort of way to rate how well the language model associates the three words with the cue word. Maybe I could 
+                add the three WordAssociativeDistances together and then divide by the standard deviation. The larger the distances, the larger the rating; likewise, 
+                the lower the rating, the closer the distances and the better the language model is at asociatting the three words. 
+            F. FinalRating()
+                - I could take the average of the ratings in order to get a final rating. 
