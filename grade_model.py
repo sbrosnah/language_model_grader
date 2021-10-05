@@ -1,9 +1,11 @@
 import numpy as np 
 import pandas as pd
 import csv
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
+from my_ordered_set import ordered_set
+import random
+#from sklearn.neighbors import KNeighborsClassifier
+#from sklearn.preprocessing import StandardScaler
+#from sklearn.model_selection import train_test_split
 
 
 class grader: 
@@ -27,11 +29,15 @@ class grader:
         self.__curr_list_of_words = []
         # This is a dictionary that contains every word with it's embedding vector
         self.__lm_dict = {"word": np.empty(50)}
+        self.__ordered_lm_word_dict = {}
+        self.median_ranks_dict = {}
+        self.median_rank_outfile = ""
     
     
-    def load_data(self, human_associations, language_model):
+    def load_data(self, human_associations, language_model, median_rank_outfile):
         self.__human_associations = human_associations
         self.__language_model = language_model
+        self.median_rank_outfile = median_rank_outfile
         if human_associations != "":
             self.__load_human_associations()
         if language_model != "":
@@ -182,18 +188,6 @@ class grader:
         return (words_in_common, words_not_in_common)
 
     def __load_language_model(self):
-        '''
-        arr = []
-        arr.append("word")
-        for num in range(0,300):
-            arr.append(str(num))
-
-        self.df = pd.read_csv(self.__language_model, sep=' ', names=arr, engine='python', encoding='utf-8', quoting=csv.QUOTE_NONE, usecols=arr)
-        self.df.set_index("word")
-
-        print(self.df.head())
-
-        '''
         in_file = open(self.__language_model, "r")
         for line in in_file:
             num = 0
@@ -217,28 +211,81 @@ class grader:
                     output_line += (" " + str(num))
                 out_file.write(output_line + '\n')
         out_file.close()
-            
-            
-    def find_kNN(self, target):
 
+    def find_kNN(self, target, k):
+        set_size = 1000
+        knn_set = ordered_set(1000)
+        target_vec = self.__lm_dict[target]
         for word in self.__lm_dict:
+            if word != target:
+                curr_vec = self.__lm_dict[word]
+                cosine_similarity = self.__find_cos_sim(target_vec, curr_vec)
+                knn_set.push([word, cosine_similarity])
+        return_list = []
+        for i in range(set_size):
+            return_list.append(knn_set.set[i][0])
+        self.__ordered_lm_word_dict[target] = return_list
+        return return_list[:k]
+        
 
-        '''
-        scaler = StandardScaler()
-        scaler.fit(self.df.drop("word", axis=1))
-        scaled_features = scaler.transform(self.df.drop('word',axis=1))
-        df_feat = pd.DataFrame(scaled_features, columns=self.df.columns[1:])
-        print(df_feat.head())
+    def __find_cos_sim(self, vec1, vec2):
+            return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
 
-        X_vals = df_feat
-        y_vals = self.df['word']
-        X_train, X_test, y_train, y_test = train_test_split(X_vals, y_vals, test_size=0.3, random_state=47)
-        knn = KNeighborsClassifier(n_neighbors=5)
-        knn.fit(X_train, y_train)
+    def find_median_ranks(self, k, sample_size, o_f):
+        out_file = open(o_f, 'w')
+        for word in self.__curr_list_of_words[:sample_size]:
+            if word in self.__lm_dict:
+                knn = self.find_kNN(word, k)
+                list_of_targets = self.__ranked_associations_dict[word][:k]
+                ranks_of_association_targets_in_lm = []
+                for target in list_of_targets:
+                    rank = self.find_rank_of_target(target, word)
+                    ranks_of_association_targets_in_lm.append(rank)
+                ranks_of_association_targets_in_lm = sorted(ranks_of_association_targets_in_lm)
+                ranks_of_association_targets_in_lm = np.array(ranks_of_association_targets_in_lm)
+                median_rank = np.median(ranks_of_association_targets_in_lm)
+                self.median_ranks_dict[word] = median_rank
+                string_to_write = str(word) + " " + str(median_rank) + "\n"
+                out_file.write(string_to_write)
+                print(word, " ", median_rank)
+        score = "score: "
+        score += (self.score_model() + "\n")
+        out_file.write(score)
+        out_file.close()
+        
 
-        pred = knn.predict(X_test)
-        print(pred)
-        '''
+
+
+    def find_rank_of_target(self, target, cue):
+        rank = 0
+        for word in self.__ordered_lm_word_dict[cue]:
+            if word != target:
+                rank += 1
+            elif word == target:
+                break
+        return rank
+
+    
+    def grade_model(self, k, sample_size):
+        self.get_human_associations_stats(2)
+        random.shuffle(self.__curr_list_of_words)
+        self.find_median_ranks(k, sample_size, self.median_rank_outfile)
+    
+    def score_model(self):
+        sum = 0
+        max_possible = len(self.median_ranks_dict) * 1000
+        for word in self.median_ranks_dict:
+            median = self.median_ranks_dict[word]
+            sum += median
+
+        score = sum / max_possible
+        return score
+
+
+
+        
+
+
 
 
     

@@ -1,0 +1,111 @@
+Stats of entire data set:
+
+average appearance:  110.28229937393284
+minimum appearance:  1
+maximum appearance:  642
+standard deviation appearance:  9.491896624308882
+cue words in common with cm_wordlist within  2  standard deveations:  4580 / 7192
+words not in common with cm_wordlist:  2612 / 7192 
+
+
+Stats within  2  standard deviations of the mean of the dataset:
+
+average appearance:  110.1167645140248
+minimum appearance:  101
+maximum appearance:  129
+standard deviation appearance:  5.4166287801620525
+cue words in common with cm_wordlist within  2  standard deveations:  4576 / 7192
+words not in common with cm_wordlist:  2616 / 7192
+
+mascara 1000.0
+district 16.0
+hunch 1000.0
+relay 203.0
+pool 19.0
+mainstream 1000.0
+way 425.0
+sieve 1000.0
+expanse 1000.0
+fourth 24.0
+rubbish 20.0
+insurance 328.0
+goodness 98.0
+corporation 722.0
+vain 1000.0
+consume 7.0
+oil 616.0
+stimulation 1000.0
+carrot 288.0
+potent 638.0
+sample 576.0
+punk 698.0
+background 183.0
+duke 5.0
+funeral 1000.0
+frolic 1000.0
+platform 167.0
+depart 75.0
+dent 1000.0
+shiver 1000.0
+participant 50.0
+urn 1000.0
+lollipop 1000.0
+mosque 70.0
+betray 1000.0
+mortgage 47.0
+breezeway 1000.0
+tyrant 23.0
+everywhere 18.0
+walk 170.0
+lobster 178.0
+shooting 127.0
+staircase 295.0
+east 4.0
+instead 185.0
+solitude 1000.0
+y 1000.0
+towards 46.0
+habitat 142.0
+craze 220.0
+racquetball 1000.0
+intended 5.0
+ripped 1000.0
+valve 472.0
+marry 49.0
+smashed 129.0
+original 120.0
+cloth 32.0
+novel 6.0
+shaking 95.0
+printer 29.0
+navigation 194.0
+taking 646.0
+cigarette 7.0
+deranged 378.0
+feast 100.0
+thimble 1000.0
+smooth 23.0
+everlasting 79.0
+oriental 212.0
+landscape 203.0
+gasp 133.0
+theorize 1000.0
+action 237.0
+heroic 18.0
+chew 146.0
+blueberries 447.0
+utility 141.0
+program 355.0
+pelican 994.0
+pitiful 97.0
+limb 185.0
+foggy 36.0
+grate 1000.0
+substance 33.0
+grill 23.0
+cradle 110.0
+thyme 360.0
+platinum 40.0
+babies 119.0
+drift 1000.0
+stoic 1000.0
